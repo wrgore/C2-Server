@@ -8,6 +8,13 @@ def banner():
     print(' _\_\ \  \ \  __ \  \ \ \-.  \  \ \ \_\ \  \ \___  \           ') 
     print('/\_____\  \ \_\ \_\  \ \_\ "\_\  \ \_____\  \/\_____\          ')
     print('\/_____/   \/_/\/_/   \/_/ \/_/   \/_____/   \/_____/  by  rg\n')
+
+#C2 Server Help
+def helpfile():
+    print ('\n')
+    print ('sessions -l' + ' ' * 22 + 'LIST ACTIVE SESSIONS')
+    print ('sessions -i [session number]' + ' ' * 5 + 'CONNECT TO SESSION')
+    print ('\n')
                                                       
 #Function to Handle Incoming Messages
 def comm_in(targ_id):
@@ -75,7 +82,9 @@ if __name__ == '__main__':
     while True:
         try:
             command = input('Command > ')
-            if command.split(" ")[0] == 'sessions': #Add another if for -h or help.
+            if command == 'help' or command == '-h':
+                helpfile()
+            if command.split(" ")[0] == 'sessions': 
                 session_counter = 0
                 if command.split(" ")[1] == '-l':
                     print ('Session' + ' ' * 10 + 'Target')
