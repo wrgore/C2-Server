@@ -68,6 +68,8 @@ def comm_handler():
             admin = remote_target.recv(1024).decode()
             if admin == 1:
                 admin_val = 'Yes'
+            elif username == 'root':
+                admin_val = 'Yes'
             else:
                 admin_val = 'No'
             cur_time = time.strftime("%H:%M:%S", time.localtime())
