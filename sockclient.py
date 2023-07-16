@@ -1,3 +1,6 @@
+#########################################################################################
+######This version is deprecated. Use winplant.py, linplant.py, or exeplant instead.#####
+#########################################################################################
 import socket
 import subprocess
 import os
