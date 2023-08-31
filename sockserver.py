@@ -242,7 +242,10 @@ if __name__ == '__main__':
                     try:
                         num = int(command.split(" ")[2])
                         targ_id = (targets[num])[0]
-                        target_comm(targ_id, targets, num)
+                        if (targets[num])[7] == 'Active':
+                            target_comm(targ_id, targets, num)
+                        else:
+                            print('\n[!] Session has been terminated. You cannot interact with this session.\n')
                     except IndexError:
                         print(f'[!] Session {num} does not exist.\n')
         except KeyboardInterrupt:
