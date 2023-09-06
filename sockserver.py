@@ -253,7 +253,10 @@ if __name__ == '__main__':
             if quit_message == 'y':
                 tar_length = len(targets)
                 for target in targets:
-                    comm_out(target[0], 'exit')
+                    if target[7] == "Dead":
+                        pass
+                    else:
+                        comm_out(target[0], 'exit')
                 print('\n[!] All sessions have been terminated.')
                 kill_flag = 1
                 if listener_counter > 0:
