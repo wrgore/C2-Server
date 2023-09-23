@@ -11,11 +11,12 @@ import shutil
 import subprocess
 
 def banner(): 
-    print('   __     ______     __   __     __  __     ______             ')
-    print('  /\ \   /\  __ \   /\ "-.\ \   /\ \/\ \   /\  ___\            ')
-    print(' _\_\ \  \ \  __ \  \ \ \-.  \  \ \ \_\ \  \ \___  \           ') 
-    print('/\_____\  \ \_\ \_\  \ \_\ "\_\  \ \_____\  \/\_____\          ')
-    print('\/_____/   \/_/\/_/   \/_/ \/_/   \/_____/   \/_____/  by  rg\n')
+    print('  ___                     _ ')
+    print(' / _ \                   | |')
+    print('/ /_\ \_____ __ __ _  ___| |')
+    print('|  _  |_  /  __/    |/ _ \ |')
+    print('| | | |/ /| | | (_| |  __/ |')
+    print('\_| |_/___|_|  \__,_|\___|_|  by rg\n')
 
 #C2 Server Help
 def helpfile():
@@ -27,9 +28,13 @@ def helpfile():
     print ('winplant exe' + ' ' * 4 + 'Creates executable payload for Windows')
     print ('winplant py' + ' ' * 5 + 'Creates Python payload for Windows')
     print ('winplant py' + ' ' * 5 + 'Creates Python payload for Linux')
-    print ('\nSESSIONS')  
+    print ('\nSESSION COMMANDS - FROM PRIMARY MENU')  
+    print ('kill [session number]' + ' ' * 12 + 'Terminates a specific session')
     print ('sessions -l' + ' ' * 22 + 'Lists active sessions')
     print ('sessions -i [session number]' + ' ' * 5 + 'Connect to session')
+    print ('\nSESSIONS COMMANDS - FROM SESSION MENU')  
+    print ('background or bg' + ' ' * 17 + 'Backgrounds the active session')
+    print ('exit' + ' ' * 29  + 'Terminates the active session')
     print ('\n')
                                                       
 #Function to Handle Incoming Messages
